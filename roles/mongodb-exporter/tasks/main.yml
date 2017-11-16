@@ -1,0 +1,24 @@
+- name: Create directory for docker project
+  file:
+    path: "{{ mongodb_exporter_dir }}"
+    state: directory
+    mode: 0755
+  become: true
+
+- name: Copy docker-compose.yml to host
+  copy:
+    src: docker-compose.yml
+    dest: "{{ mongodb_exporter_dir }}/docker-compose.yml"
+  become: true
+
+- name: Stop and remove previous mongodb_exporter service if any
+  shell: docker-compose stop && docker-compose rm -f
+  args:
+    chdir: "{{ mongodb_exporter_dir }}"
+  become: true
+
+- name: Run docker compose
+  command: docker-compose up -d
+  args:
+    chdir: "{{ mongodb_exporter_dir }}"
+  become: true

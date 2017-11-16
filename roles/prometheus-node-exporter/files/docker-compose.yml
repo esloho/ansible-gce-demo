@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+  
+  prometheus:
+    image: quay.io/prometheus/node-exporter:v0.15.0
+    ports:
+        - "0.0.0.0:9100:9100"
+    volumes:
+        - "/proc:/host/proc:ro"
+        - "/sys:/host/sys:ro"
+        - "/:/rootfs:ro,rslave"
+    network_mode: "host"
+    restart: always
+    command: ["--path.procfs","/host/proc","--path.sysfs","/host/sys","--collector.filesystem.ignored-mount-points","\"^/(sys|proc|dev|host|etc)($$|/)\""]
+

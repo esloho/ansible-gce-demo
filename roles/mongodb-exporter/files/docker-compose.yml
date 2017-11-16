@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  
+  mongodb_exporter:
+    image: eses/mongodb_exporter
+    ports:
+        - "0.0.0.0:9104:9104"
+    network_mode: "host"
+    restart: always
+

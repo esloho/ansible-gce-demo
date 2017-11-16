@@ -1,0 +1,47 @@
+- name: Install dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg2
+    - software-properties-common
+    - python
+    - python-pip
+  become: true
+
+- name: Add official GPG key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+  become: true
+
+- name: Compose repo address for current distribution
+  command: bash -c "echo \"{{ docker_repo }} \" "
+  register: docker_repo_line
+
+- debug:
+    msg: "{{ docker_repo_line.stdout }}"
+
+- name: Add docker repo
+  apt_repository:
+    repo: "{{ docker_repo_line.stdout }}"
+    state: present
+  become: true
+
+- name: Install docker ce
+  apt:
+    name: docker-ce
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Install docker-compose
+  get_url:
+    url: 'https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-Linux-x86_64'
+    dest: "{{ docker_compose_dest }}"
+    mode: '0755'
+  become: true
+

@@ -1,0 +1,22 @@
+#- hosts: all:!tag_http-server
+- hosts: tag_http-server
+  remote_user: esloho
+  roles:
+      - docker-install
+      - prometheus-node-exporter
+  tags: server_monitoring
+
+
+- hosts: tag_mongo
+  remote_user: esloho
+  roles:
+    - mongodb-exporter
+  tags: service_monitoring
+
+
+- hosts: tag_elastic
+  remote_user: esloho
+  roles:
+    - elasticsearch-exporter
+  tags: service_monitoring
+
